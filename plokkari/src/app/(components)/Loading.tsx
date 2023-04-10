@@ -13,11 +13,19 @@ const loading = () => {
     };
     
     return (
-        <Lottie 
-          options={defaultOptions}
-          height={200}
-          width={200}
-        />
+      <div
+        style={{
+          background: 'white',
+          width: '100%',
+          height: '100vh',
+        }}
+      >
+      <Lottie 
+        options={defaultOptions}
+        height={200}
+        width={200}
+      />
+      </div>
     );
 };
 

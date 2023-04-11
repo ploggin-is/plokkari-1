@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import OpenStreetMap from './(components)/OpenStreetMap'
+import Loading from './(components)/Loading'
 import CleanButton from './(components)/CleanButton'
 import StartButton from './(components)/StartButton'
-
 
 const inter = Inter({ subsets: ['latin'] })
 

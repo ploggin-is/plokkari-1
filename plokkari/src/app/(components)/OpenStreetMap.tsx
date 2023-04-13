@@ -53,7 +53,7 @@ if (!mapCenter) {
 }
 const { latitude, longitude } = mapCenter;
 return (
-  <MapContainer center={[latitude, longitude]} zoom={zoom} scrollWheelZoom={true} style={{ width: "100%", height: "100vh", margin: '0'}}>
+  <MapContainer center={[latitude, longitude]} zoom={zoom} scrollWheelZoom={true} style={{ width: "100%", height: "100vh", margin: '0'}} zoomControl= {false}>
     <TileLayer
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> 
       contributors'

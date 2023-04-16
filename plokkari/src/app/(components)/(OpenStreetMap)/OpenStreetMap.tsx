@@ -1,8 +1,9 @@
 "use client"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import React, { useEffect, useState} from "react";
-import "leaflet/dist/leaflet.css";
-import Loading from './Loading';
+import React, { useEffect, useState} from 'react';
+import 'leaflet/dist/leaflet.css';
+import Loading from '../(Loading)/Loading';
+import './style.css'
 
 
 

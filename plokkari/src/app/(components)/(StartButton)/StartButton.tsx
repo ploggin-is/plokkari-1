@@ -1,4 +1,6 @@
 "use client"
+import './style.css'
+
 
 const StartButton = () => {
   return (

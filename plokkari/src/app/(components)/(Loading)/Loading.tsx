@@ -1,6 +1,6 @@
 "use client"
 import Lottie from "react-lottie";
-import animationData from '../../../public/58737-simple-green-loading-animation'
+import animationData from '../../../../public/58737-simple-green-loading-animation'
 
 const loading = () => {
     const defaultOptions = {

@@ -8,7 +8,7 @@ const StartButton = () => {
       className="start-button"
       onClick= {() => alert("Start Button was pressed")}
     >
-      Start
+    Start
     </button>
   );
 };

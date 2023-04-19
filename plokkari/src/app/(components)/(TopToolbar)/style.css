@@ -6,8 +6,8 @@
   left: 0;
   right: 0;
   height: 45px;
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 9998;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

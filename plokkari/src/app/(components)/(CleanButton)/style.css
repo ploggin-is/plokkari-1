@@ -16,7 +16,7 @@
   .hexagon {
     position: relative;
     height: 30px;
-    width: 30px;
+    width: 27px;
     /* We cut the element in an hexagonal shape */
     z-index: 9998;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);

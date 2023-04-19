@@ -1,0 +1,45 @@
+.clean-button {
+    top: 50px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 4px solid black;
+    position: absolute;
+    overflow: hidden;
+    z-index: 9998;
+  }
+  
+  .hexagon {
+    position: relative;
+    height: 30px;
+    width: 30px;
+    /* We cut the element in an hexagonal shape */
+    z-index: 9998;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  
+  .hexagon::after { 
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    content: ''; 
+    background: black;
+    clip-path: polygon(
+      /* We first go around the pseudo element to recreate the hexagon */
+      50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%, 
+      /* We make sure to close the hexagon and go back to the start */
+      50% 0%, 
+      /* We then go down inside the hexagon */
+      50% 4px,
+      /* We finally go around the pseudo element in reverse to carve a smaller hexagon inside */
+      /* 0.49999999999999994 is sin(30deg) as it's only supported in Safari for now */
+      4px calc(25% + 4px * 0.49999999999999994), 4px calc(75% + 4px * -0.49999999999999994), 50% calc(100% - 4px), calc(100% - 4px) calc(75% + 4px * -0.49999999999999994), calc(100% - 4px) calc(25% + 4px * 0.49999999999999994), 50% 4px
+    );
+    z-index: 9998;
+  }

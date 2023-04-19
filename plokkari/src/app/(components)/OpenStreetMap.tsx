@@ -19,5 +19,3 @@ const OpenStreetMap = ({ center, zoom }) => {
     </MapContainer>
   );
 };
-
-export default OpenStreetMap;

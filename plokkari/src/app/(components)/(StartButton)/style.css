@@ -1,0 +1,20 @@
+.start-button {
+    position: absolute;
+    font-weight: bold;
+    bottom: 1rem;
+    left: 50%;
+    font-size: 1.5rem;
+    background-color: white;
+    border: 5px solid rgb(146, 218, 146);
+    border-radius: 50%;
+    cursor: pointer;
+    height: 100px;
+    width: 100px;
+    z-index: 9999;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .start-button:hover {
+    transform: scale(1.2);
+  }
+  

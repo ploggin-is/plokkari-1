@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import lottie from "lottie-web";
-import animationData from "../../../../public/58737-simple-green-loading-animation.json";
+import animationData from "../../../../public/loading.json";
 
 const Loading = () => {
   const container = useRef(null);

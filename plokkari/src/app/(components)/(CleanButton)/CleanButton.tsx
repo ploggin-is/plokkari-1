@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './style.css'
 
 
-const CleanButton = ({ center, zoom }) => {
+const CleanButton = () => {
 
   const [isPressed, setIsPressed] = useState(false);
 
@@ -11,8 +11,8 @@ const CleanButton = ({ center, zoom }) => {
     setIsPressed(!isPressed);
   }
   return (
-    <button class="clean-button" onClick={handleClick}>
-      <div class="hexagon" style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}></div>
+    <button className="clean-button" onClick={handleClick}>
+      <div className="hexagon" style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}></div>
     </button>
   )
 }

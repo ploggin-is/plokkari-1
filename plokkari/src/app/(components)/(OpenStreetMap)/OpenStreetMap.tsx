@@ -8,9 +8,34 @@ import './style.css'
 import L from "leaflet";
 
 
+function SetViewOnClick({zoom}) {
+  const map = useMap();
+  map.flyTo(map.getCenter(),zoom,{
+    animate: true,
+    duration: 1 // in seconds
+  });
+  return null;
+}
+
+function Centralcircle({}) {
+  const map = useMap();
+  let circle = L.circleMarker(map.getCenter(), {
+    radius: 20,
+    color: 'green',
+    fillOpacity: 0.2,
+  }).addTo(map);
+
+  map.on('move',function(e){
+  circle.setLatLng(map.getCenter());
+  map._renderer._update();
+  });
+  }
+
+
 
 const OpenStreetMap = ({ zoom }) => {
-  var [mapCenter, setMapCenter] = useState(null);
+  const [mapCenter, setMapCenter] = useState(null);
+  const [CurrentZoomLevel, setCurrentZoomLevel] = useState(null);
 
   const RuIcon = new L.Icon({
     iconUrl: "/RU_logo_no_text.png",
@@ -62,12 +87,13 @@ if (!mapCenter) {
   return <Loading />;
 }
 const { latitude, longitude } = mapCenter;
+
 return (
   <MapContainer 
     center={[latitude, longitude]} 
     zoom={zoom} scrollWheelZoom={true} 
     style={{ width: "100%", height: "100vh", margin: '0'}} 
-    zoomControl= {false} 
+    zoomControl={false} 
     onZoomEnd={() => setCurrentZoomLevel(useMap().getZoom())}>
     <TileLayer
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> 
@@ -83,7 +109,8 @@ return (
         Reykjavík University <br /> Where it all began.
       </Popup>
     </Marker>
-    
+    <SetViewOnClick zoom={zoom} />
+    <Centralcircle />
   </MapContainer>
 );
 };

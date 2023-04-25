@@ -158,7 +158,8 @@ return (
         }}/>
         
     </FeatureGroup> */}
-    <CleanButton />
+    {/* <CleanButton /> */}
+    <StartButton />
     <HexagonRenderer triggerGetHexFunction={triggerGetHexFunction} />
   </MapContainer>
 );

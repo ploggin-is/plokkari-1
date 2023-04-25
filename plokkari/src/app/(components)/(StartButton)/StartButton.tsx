@@ -1,8 +1,9 @@
 "use client"
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './style.css'
 import { FeatureGroup, Polygon, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
+import CleanButton from '../(CleanButton)/CleanButton';
 
 
 
@@ -11,6 +12,7 @@ function StartButton(props) {
   const [text, setText] = useState("Start");
 
   const featureGroupRef = useRef(null);
+  const resetDrawHexFunction = useRef(null);
 
     const [zoomLvl, setZoom ] = useState(13)
     const [isPressed, setIsPressed] = useState(false);
@@ -32,7 +34,6 @@ function StartButton(props) {
     }
 
     // const { getData, resetDrawHexFunction } = props;
-    // const { isPressed, }
     
     const _onDrawStart = () => featureGroupRef.current.clearLayers();
 
@@ -44,25 +45,37 @@ function StartButton(props) {
       setData([])
     }
 
-    const _onCreated = (e) => {
+    const _onCreated = (e :Event) => {
       let geometry = e.layer.getLatLngs()[0].map(points => Object.values(points));
-      const data = h3.polyfill(geometry, 12);
+      console.log(h3)
+      const data = h3.polygonToCells(geometry, 12) //#polyfill(geometry, 12);
       // getData(data);
-      const coordinates = h3.h3SetToMultiPolygon(data, false);
+      const coordinates = h3.cellsToMultiPolygon(data, false);
       setData(coordinates)
       _onDrawStart()
     }
 
-
+    useEffect(() => {
+      resetDrawHexFunction.current = resetDrawing;
+      map.on('zoom', function(e) { 
+        if (e.sourceTarget.getZoom() < 16) {
+          setDraw(prevInfo => ({...prevInfo, polygon: false, }))
+        } else {
+          setDraw(prevInfo => ({...prevInfo, polygon: true, }))
+        }
+      })
+    }, []);
 
 
   const changeTextAndZoomLvl = () => {
     if (text === "Start") {
         setText("End");
         // props.changeZoomLvl(18)
+        setIsPressed(true)
         map.flyTo(map.getCenter(), 18)
     } else {
         setText("Start");
+        setIsPressed(false);
         // props.changeZoomLvl(13)
         map.flyTo(map.getCenter(), 13)
     }
@@ -74,13 +87,15 @@ function StartButton(props) {
       {renderedPolygon}
       <FeatureGroup ref={featureGroupRef}>
         <EditControl
-            position="topleft"
+            position="bottomright"
             onDrawStart={_onDrawStart}
             onCreated={_onCreated}
             draw={draw}
             edit={edit}
           />
       </FeatureGroup>
+
+    <CleanButton changeCleanButton={setIsPressed} />
 
     <button
       className="start-button"

@@ -56,7 +56,7 @@ function StartButton(props) {
     }
 
     useEffect(() => {
-      resetDrawHexFunction.current = resetDrawing;
+      // resetDrawHexFunction.current = resetDrawing;
       map.on('zoom', function(e) { 
         if (e.sourceTarget.getZoom() < 16) {
           setDraw(prevInfo => ({...prevInfo, polygon: false, }))

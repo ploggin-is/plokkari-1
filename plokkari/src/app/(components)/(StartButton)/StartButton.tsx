@@ -70,13 +70,21 @@ function StartButton(props) {
     if (text === "Start") {
         setText("End");
         // props.changeZoomLvl(18)
-        setIsPressed(true)
-        map.flyTo(map.getCenter(), 18)
+        map.eachLayer((layer) => {
+          if (layer instanceof L.Polygon) {
+            layer.setStyle({ opacity: 0 });
+          }
+        });
+        map.flyTo(map.getCenter(), 18, {animate: true, duration: 1})
     } else {
         setText("Start");
-        setIsPressed(false);
         // props.changeZoomLvl(13)
-        map.flyTo(map.getCenter(), 13)
+        map.setView(map.getCenter(), 13)
+        map.eachLayer((layer) => {
+          if (layer instanceof L.Polygon) {
+            layer.setStyle({ opacity: 1 });
+          }
+        });
     }
   };
   

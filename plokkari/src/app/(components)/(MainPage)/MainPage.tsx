@@ -5,20 +5,17 @@ import CleanButton from '../(CleanButton)/CleanButton'
 import StartButton from '../(StartButton)/StartButton'
 import TopToolbar from '../(TopToolbar)/TopToolbar'
 
-
 const MainPage = () => 
 {
-
-  const [zoomLvl, setZoom ] = useState(13)
   
 
   return (
     <main>
       <TopToolbar></TopToolbar> 
-      <CleanButton/>
+      {/* <CleanButton changeCleanButton={ isPressed => setIsPressed(isPressed)} isPressed={isPressed}/> */}
       <div className="map-container">
-        <OpenStreetMap zoom={zoomLvl} />
-        <StartButton changeZoomLvl={ zoomLvl => setZoom(zoomLvl)}/>
+        <OpenStreetMap zoomLvl={18} />
+        {/* <StartButton /> */}
       </div>
     </main>
   );

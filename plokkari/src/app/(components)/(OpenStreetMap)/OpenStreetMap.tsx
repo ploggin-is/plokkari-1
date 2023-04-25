@@ -9,16 +9,15 @@ import L from "leaflet";
 
 import "./leaflet.css"
 import "./leaflet.draw.css"
+import HexagonRenderer from './HexagonRenderer';
+import StartButton from '../(StartButton)/StartButton';
+import CleanButton from '../(CleanButton)/CleanButton';
 
-
-
-
-
-function SetViewOnClick({zoom}) {
+function SetViewOnClick({zoomLvl}) {
   const map = useMap();
-  console.log(map.getCenter().lat)
+
   useEffect(() => {
-  map.flyTo(map.getCenter(),zoom,{
+  map.flyTo(map.getCenter(),zoomLvl,{
     animate: true,
     duration: 1 // in seconds
   });
@@ -27,36 +26,41 @@ return null;
 
 }
 
-function Centralcircle({}) {
+function Centralcircle(isPressed) {
   const map = useMap();
   let circle = null;
   map.eachLayer(function(layer) {
-    if (layer.options && layer.options.id === 'circle') {
+  if (layer.options && layer.options.id === 'circle') {
       circle = layer;
     }
   }); 
   if (!circle) {
+    console.log(isPressed)
     circle = L.circleMarker(map.getCenter(), {
       radius: 10,
       color: 'green',
-      fillOpacity: 0.2,
+      fillOpacity: 0.4,
       id: 'circle' // Add an ID to the circle layer
     }).addTo(map);
   }
+
   map.on('move',function(e){
-  circle.setLatLng(map.getCenter());
-  map._renderer._update();
+    circle.setLatLng(map.getCenter());
+    map._renderer._update();
   });
+  return null
   }
 
+  
 
-
-const OpenStreetMap = ({ zoom }) => {
+const OpenStreetMap = (props) => {
   const [mapCenter, setMapCenter] = useState(null);
   const [CurrentZoomLevel, setCurrentZoomLevel] = useState(null);
 
+  const triggerGetHexFunction = useRef(null)
   const [hexData, setHexData] = useState(null);
 
+  console.log(props.zoomLvl)
   const RuIcon = new L.Icon({
     iconUrl: "/RU_logo_no_text.png",
     iconSize: [50, 50],
@@ -69,7 +73,8 @@ const OpenStreetMap = ({ zoom }) => {
     maximumAge: 30000,
     timeout: 27000
   };
-
+  
+  
   useEffect(() => {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -101,10 +106,6 @@ const OpenStreetMap = ({ zoom }) => {
     });
   }
 
-  fetch('https://plokkari-api-service.azurewebsites.net/api/Trash/Polygon').then(data => data.json().then(data => {
-    console.log(data);
-  }))
-
 
 }, []);
 
@@ -113,11 +114,10 @@ if (!mapCenter) {
   return <Loading />;
 }
 const { latitude, longitude } = mapCenter;
-
 return (
   <MapContainer 
     center={[latitude, longitude]} 
-    zoom={zoom} scrollWheelZoom={true} 
+    zoom={props.zoomLvl} scrollWheelZoom={true} 
     style={{ width: "100%", height: "100vh", margin: '0'}} 
     zoomControl={false} 
     onZoomEnd={() => setCurrentZoomLevel(useMap().getZoom())}>
@@ -128,15 +128,15 @@ return (
     />
     <Marker icon={RuIcon} position={[64.123721, -21.926725]}>
       <Popup>
-        <Image 
+        <Image alt="asd"
           src="/RU_logo.png" 
           width={200} 
           height={0} />   
         Reykjavík University <br /> Where it all began.
       </Popup>
     </Marker>
-    <SetViewOnClick zoom={zoom}/>
-    <Centralcircle />
+    <SetViewOnClick zoomLvl={props.zoomLvl}/>
+    <Centralcircle isPressed={props.isPressed}/>
     {/* <FeatureGroup >
       <EditControl
         ref={editRef}
@@ -156,7 +156,10 @@ return (
               },
           }
         }}/>
+        
     </FeatureGroup> */}
+    <CleanButton />
+    <HexagonRenderer triggerGetHexFunction={triggerGetHexFunction} />
   </MapContainer>
 );
 };

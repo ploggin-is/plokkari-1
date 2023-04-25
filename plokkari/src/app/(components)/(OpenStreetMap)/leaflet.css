@@ -96,7 +96,11 @@
 
 .leaflet-pane         { z-index: 400; }
 
-.leaflet-tile-pane    { z-index: 200; }
+.leaflet-tile-pane    { 
+    z-index: 200; 
+    -webkit-filter: grayscale(40%);
+    filter: grayscale(40%);
+}
 .leaflet-overlay-pane { z-index: 400; }
 .leaflet-shadow-pane  { z-index: 500; }
 .leaflet-marker-pane  { z-index: 600; }

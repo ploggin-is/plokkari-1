@@ -4,7 +4,7 @@ import './style.css'
 import { FeatureGroup, Polygon, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import CleanButton from '../(CleanButton)/CleanButton';
-
+import L from "leaflet";
 
 
 function StartButton(props) {
@@ -95,16 +95,23 @@ function StartButton(props) {
           />
       </FeatureGroup>
 
-    <CleanButton changeCleanButton={setIsPressed} />
-
-    <button
-      className="start-button"
-      onClick={changeTextAndZoomLvl}
-      style={{background: props.isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+      <CleanButton changeCleanButton={setIsPressed} />
+      <div
+      ref={(ref) => {
+        if (!ref) return;
+        /** import L from "leaflet"; */
+        L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
+      }}
       >
-    {text}
-    </button>
-      </>
+        <button
+          className="start-button"
+          onClick={changeTextAndZoomLvl}
+          style={{background: props.isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+          >
+        {text}
+        </button>
+      </div>
+    </>
   );
 };
 

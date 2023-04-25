@@ -1,14 +1,8 @@
-"use client"
-import { useState } from 'react'
 import OpenStreetMap from '../(OpenStreetMap)/OpenStreetMap'
-import CleanButton from '../(CleanButton)/CleanButton'
-import StartButton from '../(StartButton)/StartButton'
 import TopToolbar from '../(TopToolbar)/TopToolbar'
 
 const MainPage = () => 
 {
-  
-
   return (
     <main>
       <TopToolbar></TopToolbar> 

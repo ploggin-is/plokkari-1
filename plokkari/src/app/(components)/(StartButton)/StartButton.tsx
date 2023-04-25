@@ -56,7 +56,7 @@ function StartButton(props) {
     }
 
     useEffect(() => {
-      resetDrawHexFunction.current = resetDrawing;
+      // resetDrawHexFunction.current = resetDrawing;
       map.on('zoom', function(e) { 
         if (e.sourceTarget.getZoom() < 16) {
           setDraw(prevInfo => ({...prevInfo, polygon: false, }))
@@ -95,12 +95,12 @@ function StartButton(props) {
           />
       </FeatureGroup>
 
-    <CleanButton changeCleanButton={setIsPressed} />
+    <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed}/>
 
     <button
       className="start-button"
       onClick={changeTextAndZoomLvl}
-      style={{background: props.isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+      style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
       >
     {text}
     </button>

@@ -10,6 +10,10 @@ import L from "leaflet";
 import "./leaflet.css"
 import "./leaflet.draw.css"
 
+
+
+
+
 function SetViewOnClick({zoom}) {
   const map = useMap();
   console.log(map.getCenter().lat)
@@ -50,6 +54,8 @@ function Centralcircle({}) {
 const OpenStreetMap = ({ zoom }) => {
   const [mapCenter, setMapCenter] = useState(null);
   const [CurrentZoomLevel, setCurrentZoomLevel] = useState(null);
+
+  const [hexData, setHexData] = useState(null);
 
   const RuIcon = new L.Icon({
     iconUrl: "/RU_logo_no_text.png",
@@ -94,6 +100,12 @@ const OpenStreetMap = ({ zoom }) => {
       longitude: -21.925479
     });
   }
+
+  fetch('https://plokkari-api-service.azurewebsites.net/api/Trash/Polygon').then(data => data.json().then(data => {
+    console.log(data);
+  }))
+
+
 }, []);
 
 // Wait while geting location

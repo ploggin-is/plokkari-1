@@ -3,7 +3,11 @@ import { useEffect, useRef, useState } from 'react';
 import './style.css'
 import { FeatureGroup, Polygon, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
-import CleanButton from '../(CleanButton)/CleanButton';
+import HexagonTypeButton from '../(CleanButton)/CleanButton';
+import { Turret_Road } from 'next/font/google';
+import { BiShapePolygon } from 'react-icons/bi';
+import VerifySelection from '../(VerifySelection)/VerifySelection';
+import { LatLng } from 'leaflet';
 
 
 
@@ -24,6 +28,9 @@ function StartButton(props) {
       circlemarker: false,
       marker: false,
       polyline: false,
+      polygon: {
+        icon: <BiShapePolygon />
+      },
       rectangle: false,
       circle: false
     })
@@ -45,8 +52,8 @@ function StartButton(props) {
       setData([])
     }
 
-    const _onCreated = (e :Event) => {
-      let geometry = e.layer.getLatLngs()[0].map(points => Object.values(points));
+    const _onCreated = (e) => {
+      let geometry = e.layer.getLatLngs()[0].map(points  => Object.values(points));
       console.log(h3)
       const data = h3.polygonToCells(geometry, 12) //#polyfill(geometry, 12);
       // getData(data);
@@ -64,7 +71,7 @@ function StartButton(props) {
           setDraw(prevInfo => ({...prevInfo, polygon: true, }))
         }
       })
-    }, []);
+    }, [map]);
 
 
   const changeTextAndZoomLvl = () => {
@@ -95,7 +102,7 @@ function StartButton(props) {
           />
       </FeatureGroup>
 
-    <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed}/>
+    <HexagonTypeButton changeCleanButton={setIsPressed} isPressed={isPressed}/>
 
     <button
       className="start-button"
@@ -104,6 +111,8 @@ function StartButton(props) {
       >
     {text}
     </button>
+
+    {/* <VerifySelection /> */}
       </>
   );
 };

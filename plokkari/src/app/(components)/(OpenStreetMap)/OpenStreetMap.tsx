@@ -9,6 +9,9 @@ import L from "leaflet";
 
 import "./leaflet.css"
 import "./leaflet.draw.css"
+import HexagonRenderer from './HexagonRenderer';
+import StartButton from '../(StartButton)/StartButton';
+import CleanButton from '../(CleanButton)/CleanButton';
 
 function SetViewOnClick({zoomLvl}) {
   const map = useMap();
@@ -42,16 +45,21 @@ function Centralcircle(isPressed) {
   }
 
   map.on('move',function(e){
-  circle.setLatLng(map.getCenter());
-  map._renderer._update();
+    circle.setLatLng(map.getCenter());
+    map._renderer._update();
   });
+  return null
   }
 
-
+  
 
 const OpenStreetMap = (props) => {
   const [mapCenter, setMapCenter] = useState(null);
   const [CurrentZoomLevel, setCurrentZoomLevel] = useState(null);
+
+  const triggerGetHexFunction = useRef(null)
+  const [hexData, setHexData] = useState(null);
+
   console.log(props.zoomLvl)
   const RuIcon = new L.Icon({
     iconUrl: "/RU_logo_no_text.png",
@@ -65,7 +73,8 @@ const OpenStreetMap = (props) => {
     maximumAge: 30000,
     timeout: 27000
   };
-
+  
+  
   useEffect(() => {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -96,6 +105,8 @@ const OpenStreetMap = (props) => {
       longitude: -21.925479
     });
   }
+
+
 }, []);
 
 // Wait while geting location
@@ -103,7 +114,6 @@ if (!mapCenter) {
   return <Loading />;
 }
 const { latitude, longitude } = mapCenter;
-
 return (
   <MapContainer 
     center={[latitude, longitude]} 
@@ -118,7 +128,7 @@ return (
     />
     <Marker icon={RuIcon} position={[64.123721, -21.926725]}>
       <Popup>
-        <Image 
+        <Image alt="asd"
           src="/RU_logo.png" 
           width={200} 
           height={0} />   
@@ -146,7 +156,10 @@ return (
               },
           }
         }}/>
+        
     </FeatureGroup> */}
+    <CleanButton />
+    <HexagonRenderer triggerGetHexFunction={triggerGetHexFunction} />
   </MapContainer>
 );
 };

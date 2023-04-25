@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import './style.css'
 import { FeatureGroup, Polygon, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
@@ -7,6 +7,7 @@ import CleanButton from '../(CleanButton)/CleanButton';
 import L from "leaflet";
 import PolygonEditor from './PolygonEditor/PolygonEditor';
 
+import "./PolygonEditor/style.css"
 
 function StartButton(props) {
 
@@ -14,48 +15,56 @@ function StartButton(props) {
 
     const featureGroupRef = useRef(null);
     const resetDrawHexFunction = useRef(null);
-
+    const [polygonStuff, setPolygonStuff] = useState(null)
     // const [zoomLvl, setZoom ] = useState(13)
     const [isPressed, setIsPressed] = useState(false);
 
     const h3 = require("h3-js");
     const [data, setData] = useState([]);  
     // const map = useMap();
-
-
-
+    
+    // const [editControl, setEditControl] = useState(null);
     const editRef = useRef();
+    const polygonHandlerRef = useRef(null);
     
     const [drawing, setDrawing] = useState(false);
 
-    const polygonHandlerRef = useRef(null);
+    const editControlRef = useRef(null);
 
     useEffect(() => {
-        if (editRef.current && editRef.current._toolbars.draw) {
-            const polygonHandler = editRef.current._toolbars.draw._modes.polygon.handler;
-            polygonHandlerRef.current = polygonHandler;
-        }
-    }, [editRef]);
+
+      if (editRef.current && editRef.current._toolbars.draw) {
+        const polygonHandler = editRef.current._toolbars.draw._modes.polygon.handler;
+        polygonHandlerRef.current = polygonHandler;
+      }
+
+      var cb = document.getElementsByClassName('leaflet-draw-draw-polygon');
+      console.log(cb)
+      setPolygonStuff(cb[0])
+    }, []);
   
-    const handleClick = () => {
-        if (!editRef.current) { return; }
-        const polygonHandler = polygonHandlerRef.current;
-        if (polygonHandler) {
-            if (!drawing) {
-                polygonHandler.enable();
-            } else {
-                try {
-                    polygonHandler.completeShape();
-                    polygonHandler.disable();
-                }
-                catch(ex){
-                  console.log(ex);
-                  
-                }
-            }
+    const handleClick = (e) => {
+      
+      const polygonHandler = polygonHandlerRef.current;
+      e.preventDefault()
+        setDrawing(!drawing)
+        if(!drawing){
+          var event = document.createEvent('Event');
+          event.initEvent('click', true, true);
+          // var cb = document.getElementsByClassName('leaflet-draw-draw-polygon');
+          // console.log(cb)
+          polygonStuff.dispatchEvent(event);
+        } else {
+          try {
+            polygonHandler.completeShape();
+            polygonHandler.disable();
+          }
+          catch(ex){
+          console.log(ex);
+          
         }
-        setDrawing(!drawing);
-    };
+        }
+      };
 
    
 
@@ -99,29 +108,29 @@ function StartButton(props) {
 
     // const { getData, resetDrawHexFunction } = props;
     
-      const _onDrawStart = () => featureGroupRef.current.clearLayers();
+      // const _onDrawStart = () => featureGroupRef.current.clearLayers();
 
-      var renderedPolygon = data.map(coordinateSet => <Polygon key={data.indexOf(coordinateSet)} color="green" positions={coordinateSet}/>)
+      // var renderedPolygon = data.map(coordinateSet => <Polygon key={data.indexOf(coordinateSet)} color="green" positions={coordinateSet}/>)
     
 
-      function resetDrawing() {
-          setData([])
-      }
+      // function resetDrawing() {
+      //     setData([])
+      // }
 
-      const _onCreated = (e :Event) => {
-          let geometry = e.layer.getLatLngs()[0].map(points => Object.values(points));
-          console.log(h3)
-          try {
-            const data = h3.polygonToCells(geometry, 12) //#polyfill(geometry, 12);
-          }
-          catch(ex){
-            return
-          }
-          // getData(data);
-          const coordinates = h3.cellsToMultiPolygon(data, false);
-          setData(coordinates)
-          _onDrawStart()
-      }
+      // const _onCreated = (e :Event) => {
+      //     let geometry = e.layer.getLatLngs()[0].map(points => Object.values(points));
+      //     console.log(h3)
+      //     try {
+      //       const data = h3.polygonToCells(geometry, 12) //#polyfill(geometry, 12);
+      //     }
+      //     catch(ex){
+      //       return
+      //     }
+      //     // getData(data);
+      //     const coordinates = h3.cellsToMultiPolygon(data, false);
+      //     setData(coordinates)
+      //     _onDrawStart()
+      // }
 
     // useEffect(() => {
     //   // resetDrawHexFunction.current = resetDrawing;
@@ -133,10 +142,6 @@ function StartButton(props) {
     //     }
     //   })
     // }, []);
-
-
-
-
 
 
 
@@ -154,17 +159,16 @@ function StartButton(props) {
     //       map.flyTo(map.getCenter(), 13)
     //   }
     // };
-  
+    
     return (
           <>
             {/* <PolygonEditor /> */}
             <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed} />
 
-
+            {/* <PolygonEditor  onShapeDrawn={onShapeDrawn} editRef={editRef} /> */}
             <FeatureGroup >
               <EditControl
-                onMounted={  mapInstance => { editRef.current = mapInstance } }
-
+                onMounted={  mapInstance => { editRef.current= mapInstance } }
                 position='bottomleft'
                 onCreated={onShapeDrawn}
                 //here you can specify your shape options and which handler you want to enable
@@ -189,13 +193,14 @@ function StartButton(props) {
               ref={(ref) => {
                 if (!ref) return;
                 L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
-              }}>
+              }}
+              >
               <button
                 className="start-button"
                 onClick={handleClick}
-                style={{background: polygonHandlerRef.current?.enabled() ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                style={{background: drawing ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
                 >
-                  {polygonHandlerRef.current?.enabled()? "End" : "Start" }
+                  {drawing? "End" : "Start" }
                 </button>
             </div>
         </>

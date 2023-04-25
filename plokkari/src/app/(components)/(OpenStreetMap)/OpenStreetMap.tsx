@@ -10,11 +10,11 @@ import L from "leaflet";
 import "./leaflet.css"
 import "./leaflet.draw.css"
 
-function SetViewOnClick({zoom}) {
+function SetViewOnClick({zoomLvl}) {
   const map = useMap();
-  console.log(map.getCenter().lat)
+
   useEffect(() => {
-  map.flyTo(map.getCenter(),zoom,{
+  map.flyTo(map.getCenter(),zoomLvl,{
     animate: true,
     duration: 1 // in seconds
   });
@@ -23,22 +23,24 @@ return null;
 
 }
 
-function Centralcircle({}) {
+function Centralcircle(isPressed) {
   const map = useMap();
   let circle = null;
   map.eachLayer(function(layer) {
-    if (layer.options && layer.options.id === 'circle') {
+  if (layer.options && layer.options.id === 'circle') {
       circle = layer;
     }
   }); 
   if (!circle) {
+    console.log(isPressed)
     circle = L.circleMarker(map.getCenter(), {
       radius: 10,
       color: 'green',
-      fillOpacity: 0.2,
+      fillOpacity: 0.4,
       id: 'circle' // Add an ID to the circle layer
     }).addTo(map);
   }
+
   map.on('move',function(e){
   circle.setLatLng(map.getCenter());
   map._renderer._update();
@@ -47,10 +49,10 @@ function Centralcircle({}) {
 
 
 
-const OpenStreetMap = ({ zoom }) => {
+const OpenStreetMap = (props) => {
   const [mapCenter, setMapCenter] = useState(null);
   const [CurrentZoomLevel, setCurrentZoomLevel] = useState(null);
-
+  console.log(props.zoomLvl)
   const RuIcon = new L.Icon({
     iconUrl: "/RU_logo_no_text.png",
     iconSize: [50, 50],
@@ -105,7 +107,7 @@ const { latitude, longitude } = mapCenter;
 return (
   <MapContainer 
     center={[latitude, longitude]} 
-    zoom={zoom} scrollWheelZoom={true} 
+    zoom={props.zoomLvl} scrollWheelZoom={true} 
     style={{ width: "100%", height: "100vh", margin: '0'}} 
     zoomControl={false} 
     onZoomEnd={() => setCurrentZoomLevel(useMap().getZoom())}>
@@ -123,8 +125,8 @@ return (
         Reykjavík University <br /> Where it all began.
       </Popup>
     </Marker>
-    <SetViewOnClick zoom={zoom}/>
-    <Centralcircle />
+    <SetViewOnClick zoomLvl={props.zoomLvl}/>
+    <Centralcircle isPressed={props.isPressed}/>
     {/* <FeatureGroup >
       <EditControl
         ref={editRef}

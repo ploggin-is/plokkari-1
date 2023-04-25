@@ -25,6 +25,7 @@ function StartButton(props) {
     <button
       className="start-button"
       onClick={changeTextAndZoomLvl}
+      style={{background: props.isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
     >
     {text}
     </button>

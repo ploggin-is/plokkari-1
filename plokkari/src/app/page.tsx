@@ -11,15 +11,15 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   const [zoomLvl, setZoom ] = useState(13)
-  
+  const [isPressed, setIsPressed] = useState(false);
 
   return (
     <main>
       <TopToolbar></TopToolbar> 
-      <CleanButton/>
+      <CleanButton changeCleanButton={ isPressed => setIsPressed(isPressed)} isPressed={isPressed}/>
       <div className="map-container">
-        <OpenStreetMap zoom={zoomLvl} />
-        <StartButton changeZoomLvl={ zoomLvl => setZoom(zoomLvl)}/>
+        <OpenStreetMap zoomLvl={zoomLvl} isPressed={isPressed}/>
+        <StartButton changeZoomLvl={ zoomLvl => setZoom(zoomLvl)} isPressed={isPressed}/>
       </div>
     </main>
   )

@@ -6,9 +6,9 @@
 }
 
 .leaflet-draw-toolbar {
-   /*
+   
    display:none; 
-   */
+  
    margin-top: 12px
 }
 
@@ -25,6 +25,7 @@
 }
 
 .leaflet-draw-toolbar a {
+    display: none;
    background-image: url('./Images/spritesheet.png');
    background-image: linear-gradient(transparent, transparent), url('./Images/spritesheet.svg');
    background-repeat: no-repeat;
@@ -228,6 +229,7 @@
 }
 
 .leaflet-draw-tooltip {
+    display: none;
    background:#363636;
    background:rgba(0,0,0,0.5);
    border:1px solid transparent;

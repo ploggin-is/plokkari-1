@@ -1,6 +1,7 @@
 "use client"
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './style.css'
+
 
 
 
@@ -15,8 +16,10 @@ function StartButton(props) {
     } else {
         setText("Start");
         props.changeZoomLvl(13)
+
     }
   };
+  
   
   return (
     <button

@@ -11,13 +11,15 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   const [zoomLvl, setZoom ] = useState(13)
+  
+
   return (
     <main>
       <TopToolbar></TopToolbar> 
       <CleanButton/>
       <div className="map-container">
         <OpenStreetMap zoom={zoomLvl} />
-        <StartButton changeZoomLvl={ zoomLvl =>setZoom(zoomLvl) }/>
+        <StartButton changeZoomLvl={ zoomLvl => setZoom(zoomLvl)}/>
       </div>
     </main>
   )

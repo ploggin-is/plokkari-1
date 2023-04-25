@@ -9,16 +9,17 @@ import { BiShapePolygon } from 'react-icons/bi';
 import VerifySelection from '../(VerifySelection)/VerifySelection';
 import { LatLng } from 'leaflet';
 
-
+import './style.css'
 
 function StartButton(props) {
 
   const [text, setText] = useState("Start");
 
   const featureGroupRef = useRef(null);
-  const resetDrawHexFunction = useRef(null);
+  // const resetDrawHexFunction = useRef(null);
 
-    const [zoomLvl, setZoom ] = useState(13)
+  const editRef = useRef();
+    // const [zoomLvl, setZoom ] = useState(13)
     const [isPressed, setIsPressed] = useState(false);
 
     const h3 = require("h3-js");
@@ -72,27 +73,71 @@ function StartButton(props) {
         }
       })
     }, [map]);
+    
+  const [drawing, setDrawing] = useState(false);
 
+  // const changeTextAndZoomLvl = () => {
 
-  const changeTextAndZoomLvl = () => {
-    if (text === "Start") {
-        setText("End");
-        // props.changeZoomLvl(18)
-        setIsPressed(true)
-        map.flyTo(map.getCenter(), 18)
-    } else {
-        setText("Start");
-        setIsPressed(false);
-        // props.changeZoomLvl(13)
-        map.flyTo(map.getCenter(), 13)
+  //   if (!drawing) {
+  //     editRef.current.leafletElement._toolbars.draw._modes.polygon.handler.enable()
+  //   } else {
+  //       editRef.current.leafletElement._toolbars.draw._modes.polygon.handler.completeShape()
+  //       editRef.current.leafletElement._toolbars.draw._modes.polygon.handler.disable()
+  //   }
+
+  //   if (text === "Start") {
+  //       setText("End");
+  //       // props.changeZoomLvl(18)
+  //       setIsPressed(true)
+  //       setDrawing(true)
+  //       map.flyTo(map.getCenter(), 18)
+  //   } else {
+  //       setText("Start");
+  //       setIsPressed(false);
+  //       // props.changeZoomLvl(13)
+  //       setDrawing(false)
+  //       map.flyTo(map.getCenter(), 13)
+  //   }
+  // };
+  console.log(editRef.current)
+
+  const handleClick = () => {
+        
+    //Edit this method to perform other actions
+    if(editRef.current && editRef.current.leafletElement){
+      if (!drawing) {
+          editRef.current.leafletElement._toolbars.draw._modes.polygon.handler.enable()
+      } else {
+          editRef.current.leafletElement._toolbars.draw._modes.polygon.handler.completeShape()
+          editRef.current.leafletElement._toolbars.draw._modes.polygon.handler.disable()
+      }
+      setDrawing(!drawing)
     }
-  };
-  
+}
+
+const onShapeDrawn = (e) => {
+  setDrawing(false)
+
+  e.layer.on('click', () => {
+      editRef.current.leafletElement._toolbars.edit._modes.edit.handler.enable()
+  })
+  e.layer.on('contextmenu', () => {
+      //do some contextmenu action here
+  })
+  e.layer.bindTooltip("Text", 
+      {
+        className: 'leaflet-draw-tooltip:before leaflet-draw-tooltip leaflet-draw-tooltip-visible',
+        sticky: true,
+        direction: 'right'
+      }
+  );
+}
+
   
   return (
     <>
       {renderedPolygon}
-      <FeatureGroup ref={featureGroupRef}>
+      {/* <FeatureGroup ref={featureGroupRef}>
         <EditControl
             position="bottomright"
             onDrawStart={_onDrawStart}
@@ -100,13 +145,34 @@ function StartButton(props) {
             draw={draw}
             edit={edit}
           />
+      </FeatureGroup> */}
+      <FeatureGroup >
+        <EditControl
+          ref={editRef}
+          position='topright'
+          onCreated={onShapeDrawn}
+          //here you can specify your shape options and which handler you want to enable
+          draw={{
+              rectangle: false,
+              circle: false,
+              polyline: false,
+              circlemarker: false,
+              marker: false,
+              polygon: {
+                  allowIntersection: false,
+                  shapeOptions: {
+                      color: "#ff0000"
+                  },
+              }
+          }}
+          />
       </FeatureGroup>
 
     <HexagonTypeButton changeCleanButton={setIsPressed} isPressed={isPressed}/>
 
     <button
       className="start-button"
-      onClick={changeTextAndZoomLvl}
+      onClick={handleClick}
       style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
       >
     {text}

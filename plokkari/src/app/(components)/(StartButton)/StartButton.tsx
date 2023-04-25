@@ -66,7 +66,6 @@ function StartButton(props) {
       })
     }, []);
 
-
   const changeTextAndZoomLvl = () => {
     if (text === "Start") {
         setText("End");
@@ -81,7 +80,6 @@ function StartButton(props) {
     }
   };
   
-  
   return (
     <>
       {renderedPolygon}
@@ -95,7 +93,7 @@ function StartButton(props) {
           />
       </FeatureGroup>
 
-      <CleanButton changeCleanButton={setIsPressed} />
+      <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed} />
       <div
       ref={(ref) => {
         if (!ref) return;
@@ -106,7 +104,7 @@ function StartButton(props) {
         <button
           className="start-button"
           onClick={changeTextAndZoomLvl}
-          style={{background: props.isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+          style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
           >
         {text}
         </button>

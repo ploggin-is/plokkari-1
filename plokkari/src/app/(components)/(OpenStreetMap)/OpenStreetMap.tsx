@@ -13,6 +13,9 @@ import HexagonRenderer from './HexagonRenderer';
 import StartButton from '../(StartButton)/StartButton';
 import CleanButton from '../(CleanButton)/CleanButton';
 
+import { RxCorners } from 'react-icons/rx';
+import ReactDOMServer from 'react-dom/server';
+
 function SetViewOnClick({zoomLvl}) {
   const map = useMap();
 
@@ -35,18 +38,20 @@ function Centralcircle(isPressed) {
     }
   }); 
   if (!circle) {
-    console.log(isPressed)
-    circle = L.circleMarker(map.getCenter(), {
-      radius: 10,
-      color: 'green',
-      fillOpacity: 0.4,
-      id: 'circle' // Add an ID to the circle layer
+    circle = L.marker(map.getCenter(), {
+      icon: new L.divIcon({
+        html: ReactDOMServer.renderToString(<RxCorners size={30} color='black'/>),
+        className: 'custom-marker-icon'
+      }),
+      id: 'circle' // Add an ID to the marker layer
     }).addTo(map);
   }
 
-  map.on('move',function(e){
+  // Update the marker position when the map is moved
+  map.on('move', function(e) {
     circle.setLatLng(map.getCenter());
-    map._renderer._update();
+    // map._renderer._update();
+
   });
   return null
   }
@@ -121,12 +126,7 @@ return (
     style={{ width: "100%", height: "100vh", margin: '0'}} 
     zoomControl={false} 
     onZoomEnd={() => setCurrentZoomLevel(useMap().getZoom())}>
-    <TileLayer
-      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> 
-      contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <Marker icon={RuIcon} position={[64.123721, -21.926725]}>
+   <Marker icon={RuIcon} position={[64.123721, -21.926725]}>
       <Popup>
         <Image alt="asd"
           src="/RU_logo.png" 
@@ -135,6 +135,11 @@ return (
         Reykjavík University <br /> Where it all began.
       </Popup>
     </Marker>
+    <TileLayer
+      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> 
+      contributors'
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
     <SetViewOnClick zoomLvl={props.zoomLvl}/>
     <Centralcircle isPressed={props.isPressed}/>
     {/* <FeatureGroup >

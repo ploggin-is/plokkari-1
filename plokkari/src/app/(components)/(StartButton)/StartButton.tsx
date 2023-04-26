@@ -16,6 +16,8 @@ function StartButton(props) {
     const editRef = useRef();
     const polygonHandlerRef = useRef(null);
     const [drawing, setDrawing] = useState(false);
+    const [text, setText] = useState("Start");
+    const map = useMap();
     useEffect(() => {
       if (editRef.current && editRef.current._toolbars.draw) {
         const polygonHandler = editRef.current._toolbars.draw._modes.polygon.handler;
@@ -28,26 +30,38 @@ function StartButton(props) {
   
     const handleClick = (e) => {
       const polygonHandler = polygonHandlerRef.current;
-      e.preventDefault()
-        setDrawing(!drawing)
-        if(!drawing){
-          var event = document.createEvent('Event');
-          event.initEvent('click', true, true);
-          polygonStuff.dispatchEvent(event);
-        } else {
-          try {
-            polygonHandler.completeShape();
-            polygonHandler.disable();
+      if (text === "Start") {
+      setText("End");  
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Polygon) {
+          layer.setStyle({ opacity: 0 });
           }
-          catch(ex){
+        });
+      map.flyTo(map.getCenter(), 18, {animate: true, duration: 1})
+      e.preventDefault()
+      var event = document.createEvent('Event');
+      event.initEvent('click', true, true);
+      polygonStuff.dispatchEvent(event);
+      } else {
+        setText("Start");  
+        try {
+          polygonHandler.completeShape();
+          polygonHandler.disable();
+          }
+        catch(ex){
           console.log(ex);
         }
+        map.setView(map.getCenter(), 13)
+        map.eachLayer((layer) => {
+          if (layer instanceof L.Polygon) {
+            layer.setStyle({ opacity: 1 });
+          }
+        });
         }
       };
 
     const onShapeDrawn = (e) => {
         if(!editRef.current) { return; }
-        setDrawing(false)
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
         })
@@ -95,9 +109,9 @@ function StartButton(props) {
               <button
                 className="start-button"
                 onClick={handleClick}
-                style={{background: drawing ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
                 >
-                  {drawing? "End" : "Start" }
+                  {text}
                 </button>
             </div>
         </>

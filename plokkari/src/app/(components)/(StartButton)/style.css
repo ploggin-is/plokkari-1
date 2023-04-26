@@ -1,3 +1,16 @@
+.blobs {
+  position: absolute;
+  display: flex;
+  transform: translateX(-50%);
+  bottom: 3vh;
+  left: 50%;
+  height: 100px;
+  width: 100px;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  z-index: 9998;
+}
+
 .start-button {
     position: absolute;
     font-weight: bold;
@@ -5,29 +18,60 @@
     background: rgb(146, 218, 146);
     color: black;
     border: 5px solid black;
-    border-radius: 50%;
+    border-radius: 10%;
     cursor: pointer;
     height: 100px;
-    width: 100px;
+    width: 150px;
     z-index: 9999;
     left: 50%;
     transform: translate(-50%);
-    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 9px #686868;
   }
   
-  .start-button:hover {
-    transform: translate(-50%) scale(1.2);
+  .start-button:active {
+    box-shadow: 0 2px #666;
+    transform: translate(-50%) translateY(5px);
   }
 
-  .blobs {
+  .edit-button {
     position: absolute;
-    display: flex;
-    transform: translateX(-50%);
-    bottom: 3vh;
-    left: 50%;
-    height: 100px;
-    width: 100px;
+    font-weight: bold;
     font-size: 1.5rem;
-    border-radius: 50%;
-    z-index: 9998;
+    background: rgb(146, 218, 146);
+    color: black;
+    border: 5px solid black;
+    border-radius: 10%;
+    cursor: pointer;
+    height: 100px;
+    width: 150px;
+    z-index: 9999;
+    transform: translate(-80%);
+    box-shadow: 0 9px #686868;
+  }
+  
+  .edit-button:active {
+    box-shadow: 0 2px #666;
+    transform: translate(-80%) translateY(5px);
+  }
+
+  .cancel-button {
+    position: absolute;
+    font-weight: bold;
+    font-size: 1.5rem;
+    background: rgb(146, 218, 146);
+    color: black;
+    border: 5px solid black;
+    border-radius: 10%;
+    cursor: pointer;
+    height: 100px;
+    width: 150px;
+    z-index: 9999;
+    left: 50%;
+    transform: translate(30%);
+    box-shadow: 0 9px #686868;
+  }
+  
+  .cancel-button:active {
+    box-shadow: 0 2px #666;
+    transform: translate(30%) translateY(5px);
   }

@@ -17,7 +17,7 @@ function StartButton(props) {
     const editRef = useRef();
     const polygonHandlerRef = useRef(null);
     const [drawing, setDrawing] = useState(false);
-    const [text, setText] = useState("Start");
+    const [text, setText] = useState(true);
     const map = useMap();
     useEffect(() => {
       if (editRef.current && editRef.current._toolbars.draw) {
@@ -31,8 +31,8 @@ function StartButton(props) {
 
     const handleClick = (e) => {
       const polygonHandler = polygonHandlerRef.current;
-      if (text === "Start") {
-      setText("End"); 
+      if (e.currentTarget.id === "start") {
+      setText(false); 
       map.eachLayer((layer) => {
         if (layer instanceof L.Polygon) {
           layer.setStyle({ opacity: 0 });
@@ -43,11 +43,18 @@ function StartButton(props) {
       var event = document.createEvent('Event');
       event.initEvent('click', true, true);
       polygonStuff.dispatchEvent(event);
-      } else {
-        setText("Start");  
+      } else if (e.currentTarget.id === "edit") {  
         try {
           polygonHandler.completeShape();
           polygonHandler.disable();
+          }
+        catch(ex){
+          console.log(ex);
+        }
+      } else if (e.currentTarget.id === "cancel") {
+        setText(true);  
+        try {
+          polygonHandler.deleteLastVertex(event);
           }
         catch(ex){
           console.log(ex);
@@ -58,7 +65,7 @@ function StartButton(props) {
             layer.setStyle({ opacity: 1 });
           }
         });
-        }
+      }
       };
 
     const onShapeDrawn = (e) => {
@@ -108,9 +115,9 @@ function StartButton(props) {
                 if (!ref) return;
                 L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
               }}
-              > { text === "Start" ? (
+              > { text ? (
                <div className='blobs'>
-              <button
+              <button id="start"
                 className="start-button"
                 onClick={handleClick}
                 style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
@@ -121,14 +128,14 @@ function StartButton(props) {
                 )
                 : (
                 <div className='blobs'>
-                <button
+                <button id="edit"
                 className="edit-button"
                 onClick={handleClick}
                 style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
                 >
                 Confirm  
                 </button> 
-                <button
+                <button id="cancel"
                 className="cancel-button"
                 onClick={handleClick}
                 style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
@@ -137,8 +144,7 @@ function StartButton(props) {
                 </button> 
                 </div>
 
-                )
-                }
+                )}
             </div>
         </>
     );

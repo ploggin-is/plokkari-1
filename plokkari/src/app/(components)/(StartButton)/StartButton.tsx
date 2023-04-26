@@ -49,15 +49,19 @@ function StartButton(props) {
     }; 
 
     const finishDrawingPolygon = (e) => {
-      if (hasShape > 2) {
-        try {
-          polygonHandler.completeShape();
-          polygonHandler.disable();
-          }
-        catch(ex){
-          console.log(ex);
-        }}
-      }; 
+      if (map.getZoom() == 18) {
+        if (hasShape > 2) {
+          try {
+            polygonHandler.completeShape();
+            polygonHandler.disable();
+            }
+          catch(ex){
+            console.log(ex);
+          }}
+      } else {
+        map.setView(map.getCenter(), 18)
+      }
+    };
 
     const cancelWhileDrawingPolygon = (e) => {  
       setIsDrawing(false)
@@ -127,9 +131,6 @@ function StartButton(props) {
        
         setHexVerts(h3.cellsToMultiPolygon(data))
 
-        
-        
-
         // editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
@@ -149,7 +150,11 @@ function StartButton(props) {
     }
     
     const onVertexDraw = () => {
+      if (map.getZoom() == 18) {
       setHasShape(prevHasShape => prevHasShape + 1);
+      } else {
+        map.setView(map.getCenter(), 18)
+      }
     };
 
     var renderedPolygon = hexVerts?.map(coordinateSet => <Polygon key={hexVerts.indexOf(coordinateSet)} color="green" positions={coordinateSet}/>)
@@ -196,7 +201,7 @@ function StartButton(props) {
                 L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
               }}
                >
-                  <button className="start-button" onClick={startDrawing} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                  <button className="start-button" onClick={startDrawing}>
                     Start 
                   </button> 
                 </div>
@@ -212,7 +217,7 @@ function StartButton(props) {
                     <button className="finish-button" onClick={finishDrawingPolygon} style={{background: hasShape < 3 ? 'grey' : 'rgb(146, 218, 146)'}}>
                       {hasShape < 3 ? `Click at least ${3 - hasShape} points` : "Finish"}
                     </button> 
-                    <button className="cancel-button" onClick={cancelWhileDrawingPolygon} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                    <button className="cancel-button" onClick={cancelWhileDrawingPolygon}>
                       Cancel  
                     </button> 
                   </div>
@@ -223,10 +228,10 @@ function StartButton(props) {
                       /** import L from "leaflet"; */
                       L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
                     }}>
-                      <button className="edit-button" onClick={confirm} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                      <button className="edit-button" onClick={confirm}>
                         Confirm  
                       </button> 
-                      <button className="cancel-button" onClick={cancelNotComfirming} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                      <button className="cancel-button" onClick={cancelNotComfirming}>
                         Cancel  
                       </button> 
                     </div>

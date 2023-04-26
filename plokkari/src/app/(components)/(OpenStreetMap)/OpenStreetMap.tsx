@@ -122,7 +122,7 @@ const { latitude, longitude } = mapCenter;
 return (
   <MapContainer 
     center={[latitude, longitude]} 
-    zoom={props.zoomLvl} scrollWheelZoom={true} 
+    zoom={props.zoomLvl} scrollWheelZoom={false} 
     style={{ width: "100%", height: "100vh", margin: '0'}} 
     zoomControl={false} 
     onZoomEnd={() => setCurrentZoomLevel(useMap().getZoom())}>

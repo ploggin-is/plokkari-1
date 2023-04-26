@@ -8,9 +8,9 @@ import L from "leaflet";
 
 import "./PolygonEditor/style.css"
 
-
 function StartButton(props) {
-
+  
+  const [hasShape, setHasShape] = useState(0);
     const [polygonStuff, setPolygonStuff] = useState(null)
     const [isPressed, setIsPressed] = useState(false);
     const h3 = require("h3-js");
@@ -22,7 +22,13 @@ function StartButton(props) {
 
     /**
      * Min logik: Takkar eru synilegir ef ad td. polgon != null og drawing != false, 
-     * 
+     * { drawing ? {
+     *    { polygonStuff != null  && < Td. Cancel, finish takkar synilegir. /> }
+     *    { polygonStuff != null  && <Eitthvad sem sest thegar drawing er true, og polygonstuff er ekki null /> }
+     * }: {
+     *  isN
+     *  
+     * }}
      * 
      * 
      */
@@ -73,6 +79,7 @@ function StartButton(props) {
       }; 
 
       const finishClick = (e) => {  
+        if(!hasShape){ return; }
         setButton("start")
           try {
             polygonHandler.completeShape();
@@ -116,7 +123,6 @@ function StartButton(props) {
 
     const onShapeDrawn = (e) => {
         if(!editRef.current) { return; }
-        e._temporarylol = true;
         e.layer.editing.enable()
         // editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
@@ -135,14 +141,21 @@ function StartButton(props) {
         setButton("edit")
     }
 
+    const onVertexDraw = (e) => {
+      console.log("asdf");
+      let i = hasShape;
+      console.log(i)
+      setHasShape(i+1)
+    }
     return (
-          <>
+          <> {hasShape}
             <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed} />
             <FeatureGroup >
               <EditControl
                 onMounted={  mapInstance => { editRef.current= mapInstance } }
                 position='bottomleft'
                 onCreated={onShapeDrawn}
+                onDrawVertex={onVertexDraw}
                 //here you can specify your shape options and which handler you want to enable
                 draw={{
                   rectangle: false,
@@ -183,9 +196,9 @@ function StartButton(props) {
                     <button 
                     className="finish-button"
                     onClick={finishClick}
-                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                    style={{background: (hasShape > 2) ? 'rgb(146, 218, 146)' : 'gray'}}
                     >
-                    Finish  
+                    Finish {hasShape} 
                     </button> 
                     <button
                     className="cancel-button"
@@ -202,9 +215,9 @@ function StartButton(props) {
                   <button
                     className="edit-button"
                     onClick={confirm}
-                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                    style={{background: hasShape ? 'rgb(241, 131, 124)' : 'grey'}}
                     >
-                    Confirm  
+                    Confirm
                   </button> 
                   <button
                     className="cancel-button"

@@ -32,7 +32,7 @@ function StartButton(props) {
     const handleClick = (e) => {
       const polygonHandler = polygonHandlerRef.current;
       if (text === "Start") {
-      setText("End");  
+      setText("End"); 
       map.eachLayer((layer) => {
         if (layer instanceof L.Polygon) {
           layer.setStyle({ opacity: 0 });
@@ -63,6 +63,7 @@ function StartButton(props) {
 
     const onShapeDrawn = (e) => {
         if(!editRef.current) { return; }
+        editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
         })
@@ -95,7 +96,8 @@ function StartButton(props) {
                   polygon: {
                     allowIntersection: false,
                     shapeOptions: {
-                      color: "#ff0000"
+                      color: "black",
+                      fillColor: "green"
                     },
                   }
                 }}
@@ -106,14 +108,37 @@ function StartButton(props) {
                 if (!ref) return;
                 L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
               }}
-              >
+              > { text === "Start" ? (
+               <div className='blobs'>
               <button
                 className="start-button"
                 onClick={handleClick}
                 style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
                 >
-                  {text}
-                </button>
+                  Start
+                </button> 
+                </div>
+                )
+                : (
+                <div className='blobs'>
+                <button
+                className="edit-button"
+                onClick={handleClick}
+                style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                >
+                Confirm  
+                </button> 
+                <button
+                className="cancel-button"
+                onClick={handleClick}
+                style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                >
+                Cancel  
+                </button> 
+                </div>
+
+                )
+                }
             </div>
         </>
     );

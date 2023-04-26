@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useRef, useState } from 'react';
 import './style.css'
-import { FeatureGroup, useMap } from 'react-leaflet';
+import { FeatureGroup, Polygon, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import CleanButton from '../(CleanButton)/CleanButton';
 import L from "leaflet";
@@ -20,7 +20,7 @@ function StartButton(props) {
     const [isDrawing, setIsDrawing] = useState(false);
 
     const [polygon, setPolygon] = useState(null)
-
+    const [hexVerts, setHexVerts ] = useState(null)
     const map = useMap();
     useEffect(() => {
       if (editRef.current && editRef.current._toolbars.draw) {
@@ -120,10 +120,19 @@ function StartButton(props) {
         if(!editRef.current) { return; }
         setPolygon(e.layer)
         e.layer.editing.enable()
+
+        let geometry = e.layer.getLatLngs()[0].map(points => Object.values(points));
+        // console.log(h3)
+        const data = h3.polygonToCells(geometry, 12);
+       
+        setHexVerts(h3.cellsToMultiPolygon(data))
+
+        
+        
+
         // editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
-            console.log("Halo")
         })
         e.layer.on('contextmenu', () => {
             //do some contextmenu action here
@@ -142,9 +151,14 @@ function StartButton(props) {
     const onVertexDraw = () => {
       setHasShape(prevHasShape => prevHasShape + 1);
     };
+
+    var renderedPolygon = hexVerts?.map(coordinateSet => <Polygon key={hexVerts.indexOf(coordinateSet)} color="green" positions={coordinateSet}/>)
+    
     
     return (
-          <> {hasShape}
+          <> 
+            
+        {renderedPolygon}
             <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed} />
             <FeatureGroup >
               <EditControl

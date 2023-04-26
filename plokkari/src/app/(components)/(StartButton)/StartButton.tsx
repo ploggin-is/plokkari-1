@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useRef, useState } from 'react';
 import './style.css'
-import { FeatureGroup, useMap } from 'react-leaflet';
+import { FeatureGroup, Polygon, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import CleanButton from '../(CleanButton)/CleanButton';
 import L from "leaflet";
@@ -37,6 +37,7 @@ function StartButton(props) {
      */
 
     const [polygon, setPolygon] = useState(null)
+      const [polyHexRepresentation, setPolyHexRepresentation] = useState(null);
 
     const map = useMap();
     useEffect(() => {
@@ -52,17 +53,17 @@ function StartButton(props) {
     const polygonHandler = polygonHandlerRef.current;
 
     const startDrawing = (e) => {
-      setIsDrawing(true)
-      map.eachLayer((layer) => {
-        if (layer instanceof L.Polygon) {
-          layer.setStyle({ opacity: 0 });
-          }
-        });
-      map.flyTo(map.getCenter(), 18, {animate: true, duration: 1})
-      e.preventDefault()
-      var event = document.createEvent('Event');
-      event.initEvent('click', true, true);
-      polygonStuff.dispatchEvent(event);
+        setIsDrawing(true)
+        map.eachLayer((layer) => {
+          if (layer instanceof L.Polygon) {
+            layer.setStyle({ opacity: 0 });
+            }
+          });
+        map.flyTo(map.getCenter(), 18, {animate: true, duration: 1})
+        e.preventDefault()
+        var event = document.createEvent('Event');
+        event.initEvent('click', true, true);
+        polygonStuff.dispatchEvent(event);
     }; 
 
     const finishDrawingPolygon = (e) => {
@@ -83,6 +84,7 @@ function StartButton(props) {
         catch(ex){
           // console.log(ex);
         }
+        setPolyHexRepresentation(null)
         map.setView(map.getCenter(), 13)
         map.eachLayer((layer) => {
           if (layer instanceof L.Polygon) {
@@ -98,7 +100,7 @@ function StartButton(props) {
         })
         setPolygon(null)
         setIsDrawing(false)
-
+        setPolyHexRepresentation(null);
         map.setView(map.getCenter(), 13)
         map.eachLayer((layer) => {
           if (layer instanceof L.Polygon) {
@@ -109,16 +111,34 @@ function StartButton(props) {
 
       const confirm = () => {
         console.log("Confirm")
+        console.log(polygon)
+        let geometry = polygon.getLatLngs()[0].map(points => Object.values(points));
+        const data = h3.polygonToCells(geometry, 12);
+        console.log(data);
+        // const coordinates = h3.cellsToMultiPolygon(data, false);
+        // console.log(coordinates);
+        
       }
 
     const onShapeDrawn = (e) => {
-        if(!editRef.current) { return; }
+      if(!editRef.current) { return; }
+      console.log('setting polygon');
+
+        map.on("draw:edited", ()=>{
+          foo()
+        })
+        console.log(e.layer);
+        
         setPolygon(e.layer)
+        
+        e.layer
+
         e.layer.editing.enable()
         // editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
         })
+
         e.layer.on('contextmenu', () => {
             //do some contextmenu action here
         })     
@@ -129,24 +149,44 @@ function StartButton(props) {
               direction: 'right'
             }
         );
+        
         setHasPolygon(true)
     }
 
-    const onVertexDraw = (e) => {
-      console.log("asdf");
-      let i = hasShape;
-      console.log(i)
-      setHasShape(i+1)
-    }
+    // const calculateVertexRep = (polygon) => {
+    //   console.log("Pee Pee Poo Poo")
+    //   console.log(polygon)
+    //     if(polygon == null){
+    //       return;
+    //     }
+    //     let geometry;
+    //     try {
+    //       geometry = polygon?.getLatLngs()[0].map(points => Object.values(points));
+        
+    //       console.log("Got Here");
+    //       console.log(geometry);
+          
+    //       const data = h3.polygonToCells(geometry, 12);
+    //       const coordinates = h3.cellsToMultiPolygon(data, false);
+    //       console.log(coordinates);
+    //       setPolyHexRepresentation(coordinates)
+    //     }
+    //     catch {
+    //       return;
+    //     }
+    // }
+
+  
     return (
-          <> {hasShape}
+          <> 
             <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed} />
             <FeatureGroup >
               <EditControl
                 onMounted={  mapInstance => { editRef.current= mapInstance } }
                 position='bottomleft'
                 onCreated={onShapeDrawn}
-                onDrawVertex={onVertexDraw}
+                onEditMove={()=>{console.log('foo');
+                }}
                 //here you can specify your shape options and which handler you want to enable
                 draw={{
                   rectangle: false,

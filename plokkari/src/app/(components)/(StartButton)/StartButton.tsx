@@ -10,31 +10,14 @@ import "./PolygonEditor/style.css"
 
 function StartButton(props) {
   
-  const [hasShape, setHasShape] = useState(0);
+    const [hasShape, setHasShape] = useState(0);
     const [polygonStuff, setPolygonStuff] = useState(null)
     const [isPressed, setIsPressed] = useState(false);
     const h3 = require("h3-js");
     const editRef = useRef();
     const polygonHandlerRef = useRef(null);
-    const [button, setButton] = useState("start");
     const [hasPolygon, setHasPolygon] = useState(false);
     const [isDrawing, setIsDrawing] = useState(false);
-
-    // const [isDrawing, setIsDtawing]
-
-
-    /**
-     * Min logik: Takkar eru synilegir ef ad td. polgon != null og drawing != false, 
-     * { drawing ? {
-     *    { polygonStuff != null  && < Td. Cancel, finish takkar synilegir. /> }
-     *    { polygonStuff != null  && <Eitthvad sem sest thegar drawing er true, og polygonstuff er ekki null /> }
-     * }: {
-     *  isN
-     *  
-     * }}
-     * 
-     * 
-     */
 
     const [polygon, setPolygon] = useState(null)
 
@@ -66,17 +49,19 @@ function StartButton(props) {
     }; 
 
     const finishDrawingPolygon = (e) => {
+      if (hasShape > 2) {
         try {
           polygonHandler.completeShape();
           polygonHandler.disable();
           }
         catch(ex){
           console.log(ex);
-        }
+        }}
       }; 
 
     const cancelWhileDrawingPolygon = (e) => {  
       setIsDrawing(false)
+      setHasShape(0)
         try {
           polygonHandler.disable();
           }
@@ -98,7 +83,8 @@ function StartButton(props) {
         })
         setPolygon(null)
         setIsDrawing(false)
-
+        setHasPolygon(false)
+        setHasShape(0)
         map.setView(map.getCenter(), 13)
         map.eachLayer((layer) => {
           if (layer instanceof L.Polygon) {
@@ -109,6 +95,7 @@ function StartButton(props) {
 
       const confirm = () => {
         console.log("Confirm")
+        setHasShape(0)
       }
 
     const onShapeDrawn = (e) => {
@@ -118,6 +105,7 @@ function StartButton(props) {
         // editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
+            console.log("Halo")
         })
         e.layer.on('contextmenu', () => {
             //do some contextmenu action here
@@ -130,14 +118,13 @@ function StartButton(props) {
             }
         );
         setHasPolygon(true)
+        setHasShape(0)
     }
-
-    const onVertexDraw = (e) => {
-      console.log("asdf");
-      let i = hasShape;
-      console.log(i)
-      setHasShape(i+1)
-    }
+    
+    const onVertexDraw = () => {
+      setHasShape(prevHasShape => prevHasShape + 1);
+    };
+    
     return (
           <> {hasShape}
             <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed} />
@@ -170,7 +157,13 @@ function StartButton(props) {
                 L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
               }}
               > { !isDrawing ? (
-               <div className='blobs'>
+               <div className='blobs'
+               ref={(ref) => {
+                if (!ref) return;
+                /** import L from "leaflet"; */
+                L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
+              }}
+               >
                   <button className="start-button" onClick={startDrawing} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
                     Start 
                   </button> 
@@ -178,16 +171,26 @@ function StartButton(props) {
                 )
                 : 
                 !hasPolygon ? (
-                  <div className='blobs'>
-                    <button className="finish-button" onClick={finishDrawingPolygon} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
-                      Finish  
+                  <div className='blobs'
+                  ref={(ref) => {
+                    if (!ref) return;
+                    /** import L from "leaflet"; */
+                    L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
+                  }}>
+                    <button className="finish-button" onClick={finishDrawingPolygon} style={{background: hasShape < 3 ? 'grey' : 'rgb(146, 218, 146)'}}>
+                      Finish {hasShape}
                     </button> 
                     <button className="cancel-button" onClick={cancelWhileDrawingPolygon} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
                       Cancel  
                     </button> 
                   </div>
                   ) : (
-                    <div className='blobs'>
+                    <div className='blobs'
+                    ref={(ref) => {
+                      if (!ref) return;
+                      /** import L from "leaflet"; */
+                      L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
+                    }}>
                       <button className="edit-button" onClick={confirm} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
                         Confirm  
                       </button> 

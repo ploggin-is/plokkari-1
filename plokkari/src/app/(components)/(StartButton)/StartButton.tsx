@@ -95,6 +95,12 @@ function StartButton(props) {
 
       const confirm = () => {
         console.log("Confirm")
+        console.log(polygon.getLatLngs())
+        let geometry = polygon.getLatLngs()[0].map(points => Object.values(points));
+        // console.log(h3)
+        const data = h3.polygonToCells(geometry, 12);
+        console.log(data);
+        
         setHasShape(0)
       }
 

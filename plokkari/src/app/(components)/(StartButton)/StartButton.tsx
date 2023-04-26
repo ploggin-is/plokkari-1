@@ -17,6 +17,8 @@ function StartButton(props) {
     const editRef = useRef();
     const polygonHandlerRef = useRef(null);
     const [button, setButton] = useState("start");
+    const [hasPolygon, setHasPolygon] = useState(false);
+    const [isDrawing, setIsDrawing] = useState(false);
     // const [isDrawing, setIsDtawing]
 
 
@@ -48,8 +50,8 @@ function StartButton(props) {
 
     const polygonHandler = polygonHandlerRef.current;
 
-    const startClick = (e) => {
-      setButton("finish")
+    const startDrawing = (e) => {
+      setIsDrawing(true)
       map.eachLayer((layer) => {
         if (layer instanceof L.Polygon) {
           layer.setStyle({ opacity: 0 });
@@ -62,8 +64,18 @@ function StartButton(props) {
       polygonStuff.dispatchEvent(event);
     }; 
 
-    const cancel1Click = (e) => {  
+    const finishDrawingPolygon = (e) => {  
       setButton("start")
+        try {
+          polygonHandler.completeShape();
+          polygonHandler.disable();
+          }
+        catch(ex){
+          // console.log(ex);
+        }
+      }; 
+
+    const cancelWhileDrawingPolygon = (e) => {  
         try {
           polygonHandler.disable();
           }
@@ -78,23 +90,9 @@ function StartButton(props) {
         });
       }; 
 
-      const finishClick = (e) => {  
-        if(!hasShape){ return; }
-        setButton("start")
-          try {
-            polygonHandler.completeShape();
-            polygonHandler.disable();
-            }
-          catch(ex){
-            // console.log(ex);
-          }
-        }; 
-
-    const cancel2Click = (e) =>{
-      setButton("start"); 
+    const cancelNotComfirming = (e) =>{
         try {
           polygonHandler.disable();
-          polygonHandler.deleteLastVertex();
           }
         catch(ex){
           console.log(ex);
@@ -138,7 +136,6 @@ function StartButton(props) {
               direction: 'right'
             }
         );
-        setButton("edit")
     }
 
     const onVertexDraw = (e) => {
@@ -178,58 +175,34 @@ function StartButton(props) {
                 if (!ref) return;
                 L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
               }}
-              > { button === "start" ? (
+              > { !isDrawing ? (
                <div className='blobs'>
-
-                <button
-                    className="start-button"
-                    onClick={startClick}
-                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
-                    >
-                      Start 
+                  <button className="start-button" onClick={startDrawing} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                    Start 
                   </button> 
                 </div>
                 )
-                : button === "finish" ? 
-                (
+                : 
+                !hasPolygon ? (
                   <div className='blobs'>
-                    <button 
-                    className="finish-button"
-                    onClick={finishClick}
-                    style={{background: (hasShape > 2) ? 'rgb(146, 218, 146)' : 'gray'}}
-                    >
-                    Finish {hasShape} 
+                    <button className="finish-button" onClick={finishDrawingPolygon} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                      Finish  
                     </button> 
-                    <button
-                    className="cancel-button"
-                    onClick={cancel1Click}
-                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
-                    >
-                    Cancel  
+                    <button className="cancel-button" onClick={cancelWhileDrawingPolygon} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                      Cancel  
                     </button> 
                   </div>
-                )
-                :
-                (
-                <div className='blobs'>
-                  <button
-                    className="edit-button"
-                    onClick={confirm}
-                    style={{background: hasShape ? 'rgb(241, 131, 124)' : 'grey'}}
-                    >
-                    Confirm
-                  </button> 
-                  <button
-                    className="cancel-button"
-                    onClick={cancel2Click}
-                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
-                  >
-                  Cancel  
-                  </button> 
-                </div>
-                )
-              
-              }
+                  ) : (
+                    <div className='blobs'>
+                      <button className="edit-button" onClick={confirm} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                        Confirm  
+                      </button> 
+                      <button className="cancel-button" onClick={cancelNotComfirming} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
+                        Cancel  
+                      </button> 
+                    </div>
+                  )
+                } 
             </div>
         </>
     );

@@ -21,17 +21,7 @@ const TopToolbar = () => {
         &#x2630;
         </button>
       </div>
-      <div className='toolbar-buttons'>
-        <button
-          onClick= {() => alert("Show Notification")}>
-          <Image src="/(icons)/notification.svg" width={20} height={15} />
-        </button>
-        <button
-          onClick= {() => alert("Show Profile")}>
-          {/* ToDo: make this profile picture */}
-          &#x1F464;
-        </button>
-      </div>
+      
     </div>
     <MenuToolbar menuOpen={menuOpen} toggleMenu={toggleMenu} />
     </div>

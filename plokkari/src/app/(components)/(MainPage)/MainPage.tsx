@@ -8,7 +8,7 @@ const MainPage = () =>
       <TopToolbar></TopToolbar> 
       {/* <CleanButton changeCleanButton={ isPressed => setIsPressed(isPressed)} isPressed={isPressed}/> */}
       <div className="map-container">
-        <OpenStreetMap zoomLvl={18} />
+        <OpenStreetMap zoomLvl={13} />
         {/* <StartButton /> */}
       </div>
     </main>

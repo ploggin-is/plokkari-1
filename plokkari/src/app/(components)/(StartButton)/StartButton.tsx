@@ -20,6 +20,17 @@ function StartButton(props) {
     const [text, setText] = useState("start");
     // const [isDrawing, setIsDtawing]
 
+
+    /**
+     * Min logik: Takkar eru synilegir ef ad td. polgon != null og drawing != false, 
+     * 
+     * 
+     * 
+     */
+
+
+
+
     const [polygon, setPolygon] = useState(null)
 
     const map = useMap();
@@ -75,7 +86,7 @@ function StartButton(props) {
         });
       } 
       };
-``
+
 
       const confirm = () => {
           console.log(polygon._latlngs)
@@ -83,21 +94,23 @@ function StartButton(props) {
 
       const cancel = () => {
         polygon._map.eachLayer(layer => {
-          if(layer._latlng != undefined){layer.remove()}
+          if(layer._leaflet_id  == polygon._leaflet_id){layer.remove()}
         })
-        polygon._map.eachLayer(layer => {
-          if(layer._path != undefined){layer.remove()}
-        })
+        setPolygon(null)
+        setDrawing(false)
+        // polygon._map.eachLayer(layer => {
+        //   if(layer._path != undefined){layer.remove()}
+        // })
       }
 
     const onShapeDrawn = (e) => {
         if(!editRef.current) { return; }
-
+        e._temporarylol = true;
         console.log(e.layer);
         
         setPolygon(e.layer);
-
-        editRef.current._toolbars.edit._modes.edit.handler.enable()
+        e.layer.editing.enable()
+        // editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
         })
@@ -112,7 +125,7 @@ function StartButton(props) {
               direction: 'right'
             }
         );
-        setText("edit")
+        setDrawing(false);
     }
 
     return (

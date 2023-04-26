@@ -8,6 +8,7 @@ import L from "leaflet";
 
 import "./PolygonEditor/style.css"
 
+
 function StartButton(props) {
 
     const [polygonStuff, setPolygonStuff] = useState(null)
@@ -27,7 +28,7 @@ function StartButton(props) {
       console.log(cb)
       setPolygonStuff(cb[0])
     }, []);
-  
+
     const handleClick = (e) => {
       const polygonHandler = polygonHandlerRef.current;
       if (text === "Start") {

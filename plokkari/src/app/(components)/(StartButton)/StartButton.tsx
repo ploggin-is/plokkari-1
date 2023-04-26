@@ -18,6 +18,10 @@ function StartButton(props) {
     const polygonHandlerRef = useRef(null);
     const [drawing, setDrawing] = useState(false);
     const [text, setText] = useState("start");
+    // const [isDrawing, setIsDtawing]
+
+    const [polygon, setPolygon] = useState(null)
+
     const map = useMap();
     useEffect(() => {
       if (editRef.current && editRef.current._toolbars.draw) {
@@ -51,7 +55,7 @@ function StartButton(props) {
           polygonHandler.disable();
           }
         catch(ex){
-          console.log(ex);
+          // console.log(ex);
         }
       } 
       else if (e.currentTarget.id === "cancel1" || e.currentTarget.id === "cancel2") {
@@ -71,9 +75,28 @@ function StartButton(props) {
         });
       } 
       };
+``
+
+      const confirm = () => {
+          console.log(polygon._latlngs)
+      }
+
+      const cancel = () => {
+        polygon._map.eachLayer(layer => {
+          if(layer._latlng != undefined){layer.remove()}
+        })
+        polygon._map.eachLayer(layer => {
+          if(layer._path != undefined){layer.remove()}
+        })
+      }
 
     const onShapeDrawn = (e) => {
         if(!editRef.current) { return; }
+
+        console.log(e.layer);
+        
+        setPolygon(e.layer);
+
         editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {
             editRef.current._toolbars.edit._modes.edit.handler.enable()
@@ -81,6 +104,7 @@ function StartButton(props) {
         e.layer.on('contextmenu', () => {
             //do some contextmenu action here
         })
+        
         e.layer.bindTooltip("Text", 
             {
               className: 'leaflet-draw-tooltip:before leaflet-draw-tooltip leaflet-draw-tooltip-visible',
@@ -123,44 +147,44 @@ function StartButton(props) {
               }}
               > { text === "start" ? (
                <div className='blobs'>
-              <button id="start"
-                className="start-button"
-                onClick={handleClick}
-                style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
-                >
-                  Start
-                </button> 
+                <button id="start"
+                    className="start-button"
+                    onClick={handleClick}
+                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                    >
+                      Start 
+                  </button> 
                 </div>
                 )
                 : text === "edit" ? 
                 (
                 <div className='blobs'>
-                <button id="edit"
-                className="edit-button"
-                onClick={handleClick}
-                style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
-                >
-                Confirm  
-                </button> 
-                <button id="cancel2"
-                className="cancel-button-2"
-                onClick={handleClick}
-                style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
-                >
-                Cancel  
-                </button> 
+                  <button id="edit"
+                    className="edit-button"
+                    onClick={confirm}
+                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                    >
+                    Confirm  
+                  </button> 
+                  <button id="cancel2"
+                    className="cancel-button-2"
+                    onClick={cancel}
+                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                  >
+                  Cancel  
+                  </button> 
                 </div>
                 )
                 :
                 (
                   <div className='blobs'>
-                  <button id="cancel1"
-                  className="cancel-button-1"
-                  onClick={handleClick}
-                  style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
-                  >
-                  Cancel  
-                  </button> 
+                    <button id="cancel1"
+                    className="cancel-button-1"
+                    onClick={cancel}
+                    style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                    >
+                    Cancel  
+                    </button> 
                   </div>
                 )
                 

@@ -19,6 +19,7 @@ function StartButton(props) {
     const [button, setButton] = useState("start");
     const [hasPolygon, setHasPolygon] = useState(false);
     const [isDrawing, setIsDrawing] = useState(false);
+
     // const [isDrawing, setIsDtawing]
 
 
@@ -58,18 +59,18 @@ function StartButton(props) {
       polygonStuff.dispatchEvent(event);
     }; 
 
-    const finishDrawingPolygon = (e) => {  
-      setButton("start")
+    const finishDrawingPolygon = (e) => {
         try {
           polygonHandler.completeShape();
           polygonHandler.disable();
           }
         catch(ex){
-          // console.log(ex);
+          console.log(ex);
         }
       }; 
 
     const cancelWhileDrawingPolygon = (e) => {  
+      setIsDrawing(false)
         try {
           polygonHandler.disable();
           }
@@ -84,30 +85,23 @@ function StartButton(props) {
         });
       }; 
 
-    const cancelNotComfirming = (e) =>{
-        try {
-          polygonHandler.disable();
-          }
-        catch(ex){
-          console.log(ex);
-        }
+      const cancelNotComfirming = () => {
+        polygon._map.eachLayer(layer => {
+          if(layer._latlng != undefined){layer.remove()}
+        })
+        polygon._map.eachLayer(layer => {
+          if(layer._path != undefined){layer.remove()}
+          if(layer._leaflet_id  == polygon._leaflet_id){layer.remove()}
+        })
+        setPolygon(null)
+        setIsDrawing(false)
         map.setView(map.getCenter(), 13)
         map.eachLayer((layer) => {
           if (layer instanceof L.Polygon) {
             layer.setStyle({ opacity: 1 });
           }
         });
-      };
-
-      const cancel = () => {
-        polygon._map.eachLayer(layer => {
-          if(layer._leaflet_id  == polygon._leaflet_id){layer.remove()}
-        })
-        setPolygon(null)
-        // polygon._map.eachLayer(layer => {
-        //   if(layer._path != undefined){layer.remove()}
-        // })
-      };
+      }
 
       const confirm = () => {
         console.log("Confirm")
@@ -131,6 +125,7 @@ function StartButton(props) {
               direction: 'right'
             }
         );
+        setHasPolygon(true)
     }
 
     return (

@@ -92,15 +92,13 @@ function StartButton(props) {
       }; 
 
       const cancelNotComfirming = () => {
+        
         polygon._map.eachLayer(layer => {
-          if(layer._latlng != undefined){layer.remove()}
-        })
-        polygon._map.eachLayer(layer => {
-          if(layer._path != undefined){layer.remove()}
           if(layer._leaflet_id  == polygon._leaflet_id){layer.remove()}
         })
         setPolygon(null)
         setIsDrawing(false)
+
         map.setView(map.getCenter(), 13)
         map.eachLayer((layer) => {
           if (layer instanceof L.Polygon) {
@@ -115,6 +113,7 @@ function StartButton(props) {
 
     const onShapeDrawn = (e) => {
         if(!editRef.current) { return; }
+        setPolygon(e.layer)
         e.layer.editing.enable()
         // editRef.current._toolbars.edit._modes.edit.handler.enable()
         e.layer.on('click', () => {

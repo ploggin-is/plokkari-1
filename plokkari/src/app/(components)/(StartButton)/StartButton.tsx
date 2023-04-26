@@ -56,7 +56,7 @@ function StartButton(props) {
           }
         catch(ex){
           console.log(ex);
-        }
+        }}
       }; 
 
     const cancelWhileDrawingPolygon = (e) => {  

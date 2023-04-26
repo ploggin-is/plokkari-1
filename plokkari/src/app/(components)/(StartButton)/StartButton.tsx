@@ -1,7 +1,7 @@
 "use client"
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './style.css'
-import { FeatureGroup, Polygon, useMap } from 'react-leaflet';
+import { FeatureGroup, useMap } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import CleanButton from '../(CleanButton)/CleanButton';
 import L from "leaflet";
@@ -17,7 +17,7 @@ function StartButton(props) {
     const editRef = useRef();
     const polygonHandlerRef = useRef(null);
     const [drawing, setDrawing] = useState(false);
-    const [text, setText] = useState(true);
+    const [text, setText] = useState("start");
     const map = useMap();
     useEffect(() => {
       if (editRef.current && editRef.current._toolbars.draw) {
@@ -31,8 +31,9 @@ function StartButton(props) {
 
     const handleClick = (e) => {
       const polygonHandler = polygonHandlerRef.current;
+      console.log(polygonHandler)
       if (e.currentTarget.id === "start") {
-      setText(false); 
+      setText("cancel")
       map.eachLayer((layer) => {
         if (layer instanceof L.Polygon) {
           layer.setStyle({ opacity: 0 });
@@ -43,7 +44,8 @@ function StartButton(props) {
       var event = document.createEvent('Event');
       event.initEvent('click', true, true);
       polygonStuff.dispatchEvent(event);
-      } else if (e.currentTarget.id === "edit") {  
+      } 
+      else if (e.currentTarget.id === "edit") {  
         try {
           polygonHandler.completeShape();
           polygonHandler.disable();
@@ -51,10 +53,12 @@ function StartButton(props) {
         catch(ex){
           console.log(ex);
         }
-      } else if (e.currentTarget.id === "cancel") {
-        setText(true);  
+      } 
+      else if (e.currentTarget.id === "cancel1" || e.currentTarget.id === "cancel2") {
+        setText("start"); 
         try {
-          polygonHandler.deleteLastVertex(event);
+          polygonHandler.disable();
+          polygonHandler.deleteLastVertex();
           }
         catch(ex){
           console.log(ex);
@@ -65,7 +69,7 @@ function StartButton(props) {
             layer.setStyle({ opacity: 1 });
           }
         });
-      }
+      } 
       };
 
     const onShapeDrawn = (e) => {
@@ -84,7 +88,9 @@ function StartButton(props) {
               direction: 'right'
             }
         );
+        setText("edit")
     }
+
     return (
           <>
             <CleanButton changeCleanButton={setIsPressed} isPressed={isPressed} />
@@ -115,7 +121,7 @@ function StartButton(props) {
                 if (!ref) return;
                 L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
               }}
-              > { text ? (
+              > { text === "start" ? (
                <div className='blobs'>
               <button id="start"
                 className="start-button"
@@ -126,7 +132,8 @@ function StartButton(props) {
                 </button> 
                 </div>
                 )
-                : (
+                : text === "edit" ? 
+                (
                 <div className='blobs'>
                 <button id="edit"
                 className="edit-button"
@@ -135,16 +142,29 @@ function StartButton(props) {
                 >
                 Confirm  
                 </button> 
-                <button id="cancel"
-                className="cancel-button"
+                <button id="cancel2"
+                className="cancel-button-2"
                 onClick={handleClick}
                 style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
                 >
                 Cancel  
                 </button> 
                 </div>
-
-                )}
+                )
+                :
+                (
+                  <div className='blobs'>
+                  <button id="cancel1"
+                  className="cancel-button-1"
+                  onClick={handleClick}
+                  style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}
+                  >
+                  Cancel  
+                  </button> 
+                  </div>
+                )
+                
+              }
             </div>
         </>
     );

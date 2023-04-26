@@ -178,7 +178,7 @@ function StartButton(props) {
                     L.DomEvent.disableClickPropagation(ref).disableScrollPropagation(ref);
                   }}>
                     <button className="finish-button" onClick={finishDrawingPolygon} style={{background: hasShape < 3 ? 'grey' : 'rgb(146, 218, 146)'}}>
-                      Finish {hasShape}
+                      {hasShape < 3 ? `Mark at least ${3 - hasShape} more` : "Finish"}
                     </button> 
                     <button className="cancel-button" onClick={cancelWhileDrawingPolygon} style={{background: isPressed ? 'rgb(241, 131, 124)' : 'rgb(146, 218, 146)'}}>
                       Cancel  

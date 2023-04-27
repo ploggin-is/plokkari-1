@@ -77,5 +77,6 @@ jobs:
           app-name: 'plokkari'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_913C78EDCC534118B0BAAB036EA3904E }}
-          package: app
+          package: .
+          runtime-stack: NODE|18-lts
 

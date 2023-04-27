@@ -15,7 +15,7 @@ interface MenuToolbarProps {
             x
         </button>
         <ul>
-          <button 
+          {/* <button 
             onClick= {() => alert("Open Home page")}>
             <li> <Image src="/(icons)/home.svg" width={30} height={20} /> Home</li>
           </button>
@@ -26,7 +26,7 @@ interface MenuToolbarProps {
           <button 
             onClick= {() => alert("Show Statistics")}>
             <li> <Image src="/(icons)/statistics.svg" width={30} height={20} /> Statistics</li>
-          </button>
+          </button> */}
         </ul>
         <div style={{ position: 'absolute', bottom: '65px', left: '50px' }}>
           <Image 
@@ -34,10 +34,10 @@ interface MenuToolbarProps {
             width={200} 
             height={0} />
         </div>
-        <button className="settings-button"
+        {/* <button className="settings-button"
             onClick= {() => alert("Open Settings")}>
             <li> <Image src="/(icons)/settings.svg" width={30} height={20} /> Settings</li>
-        </button>
+        </button> */}
       </div>
     );
   };

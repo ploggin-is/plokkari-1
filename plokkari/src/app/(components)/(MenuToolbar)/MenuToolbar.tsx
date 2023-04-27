@@ -2,12 +2,9 @@
 import Image from 'next/image'
 import './style.css'
 
-interface MenuToolbarProps {
-    menuOpen: boolean;
-    toggleMenu: () => void;
-  }
+
   
-  const MenuToolbar: React.FC<MenuToolbarProps> = ({ menuOpen, toggleMenu }) => {
+  const MenuToolbar = ({ menuOpen, toggleMenu }) => {
     return (
       <div className={`menutoolbar ${menuOpen ? 'open' : ''}`}>
         <h1>Menu</h1>
@@ -32,7 +29,8 @@ interface MenuToolbarProps {
           <Image 
             src="/RU_logo.png" 
             width={200} 
-            height={0} />
+            height={0} 
+            />
         </div>
         {/* <button className="settings-button"
             onClick= {() => alert("Open Settings")}>

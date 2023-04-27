@@ -3,8 +3,6 @@ import './style.css'
 import L from "leaflet";
 
 function CleanButton(props) {
-  console.log(props);
-  
   const handleClick = () => {
     props.changeCleanButton(!props.isPressed);
   }

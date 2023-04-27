@@ -5,18 +5,18 @@ import React, { useEffect, useState, useRef} from 'react';
 import 'leaflet/dist/leaflet.css';
 import Loading from '../(Loading)/Loading';
 import './style.css'
-import L from "leaflet";
+import L from 'leaflet';
 
 import "./leaflet.css"
 import "./leaflet.draw.css"
 import HexagonRenderer from './HexagonRenderer';
 import StartButton from '../(StartButton)/StartButton';
-import CleanButton from '../(CleanButton)/CleanButton';
+
 
 import { RxCorners } from 'react-icons/rx';
 import ReactDOMServer from 'react-dom/server';
 
-function SetViewOnClick({zoomLvl}) {
+const SetViewOnClick = ({zoomLvl}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ return null;
 
 }
 
-function Centralcircle(isPressed) {
+const Centralcircle = () => {
   const map = useMap();
   let circle = null;
   map.eachLayer(function(layer) {
@@ -60,7 +60,6 @@ function Centralcircle(isPressed) {
 
 const OpenStreetMap = (props) => {
   const [mapCenter, setMapCenter] = useState(null);
-  const [CurrentZoomLevel, setCurrentZoomLevel] = useState(null);
 
   const triggerGetHexFunction = useRef(null)
   const [hexData, setHexData] = useState(null);
@@ -124,8 +123,7 @@ return (
     center={[latitude, longitude]} 
     zoom={props.zoomLvl} scrollWheelZoom={false} 
     style={{ width: "100%", height: "100vh", margin: '0'}} 
-    zoomControl={false} 
-    onZoomEnd={() => setCurrentZoomLevel(useMap().getZoom())}>
+    zoomControl={false}>
    <Marker icon={RuIcon} position={[64.123721, -21.926725]}>
       <Popup>
         <Image alt="asd"

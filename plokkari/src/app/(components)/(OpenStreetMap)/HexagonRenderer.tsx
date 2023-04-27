@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef} from 'react'
 import { useMap, Polygon, Marker, Polyline } from 'react-leaflet'
 
+interface GetHexProps {
+  triggerGetHexFunction: React.MutableRefObject<() => void>;
+}
 
 
-function GetHex(props) {
+function GetHex(props: GetHexProps) {
   
 
     const [data, setData] = useState(null);  
     const map = useMap();
     // const h3 = require("h3-js");
-    const boundedHex = [];
+    const boundedHex: JSX.Element[] = [];
     let number = 0;
     const {triggerGetHexFunction} = props;
     

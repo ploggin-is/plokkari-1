@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google'
 import dynamic from "next/dynamic";
+
 const MainPage = dynamic(() =>
   import("./(components)/(MainPage)/MainPage"), { ssr: false });
 

@@ -39,11 +39,14 @@
   }
   
   .menutoolbar h1 {
+    font-weight: normal;
     padding: 2rem;
     font-size: 2rem;
   }
   
   .menutoolbar ul button {
+    background: transparent;
+    border: 0;
     display: flex;
     align-items: center;
     width: 100%;
@@ -54,6 +57,7 @@
   }
   
   .close-button {
+    background: transparent;
     position: absolute;
     top: 8px;
     right: 8px;

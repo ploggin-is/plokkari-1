@@ -4,10 +4,10 @@
 name: Build and deploy Node.js app to Azure Web App - plokkari
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
-  workflow_dispatch:
 
 jobs:
   build:

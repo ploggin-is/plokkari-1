@@ -41,7 +41,7 @@ jobs:
           cd app
           npm run build --if-present
       
-      - name: Build
+      - name: Zip
         - run: |
           cd app
           zip -r node-app.zip .
@@ -65,7 +65,7 @@ jobs:
         with:
           name: node-app
 
-      - name: unzip
+      - name: Unzip
         - run: |
           unzip node-app.zip
           rm node-app.zip

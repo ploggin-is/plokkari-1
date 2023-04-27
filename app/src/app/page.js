@@ -1,13 +1,12 @@
 import { Inter } from 'next/font/google'
-import MainPage from './(components)/(MainPage)/MainPage'
-
-
+import dynamic from "next/dynamic";
+const MainPage = dynamic(() =>
+  import("./(components)/(MainPage)/MainPage"), { ssr: false });
 
 const inter = Inter({ subsets: ['latin'] })
 
 
 export default function Home() { 
-
   return (
     <MainPage />
   )

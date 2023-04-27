@@ -15,7 +15,7 @@ const TopToolbar = () => {
     <div className='toolbar'>
       <div className='toolbar-buttons'>
         <button
-          style={{display: menuOpen?"none":"block"}}
+          style={{display: menuOpen ? "none":"block"}}
           onClick= {toggleMenu}
           >
         &#x2630;
